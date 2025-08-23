@@ -28,6 +28,10 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     }
   }, [countdown]);
 
+  const queryParams = new URLSearchParams(window.location.search);
+  const inviteToken = queryParams.get("invite");
+
+  // Resend OTP
   const resendOtp = async () => {
     try {
       setLoading(true);
@@ -36,6 +40,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       const payload = {
         extension,
         phone: nationalPhone,
+        invite_link: inviteToken ?? null,
       };
 
       const response = await api.post("send-otp-login", payload);
@@ -63,6 +68,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       phone: nationalPhone,
       otp,
       is_web: true,
+      invite_link: inviteToken ?? null,
     };
 
     try {
@@ -124,7 +130,10 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
                 setPhone(value);
                 setExtension("+" + country.dialCode);
 
-                const numberOnly = value.replace(country.dialCode, "");
+                // Correct trimming of dial code from value
+                const numberOnly = value.startsWith(country.dialCode)
+                  ? value.slice(country.dialCode.length)
+                  : value;
                 setNationalPhone(numberOnly);
               }}
               inputStyle={{ width: "100%" }}
