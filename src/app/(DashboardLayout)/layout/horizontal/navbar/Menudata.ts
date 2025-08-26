@@ -6,13 +6,13 @@ const Menuitems = [
     id: uniqueId(),
     title: "Dashboard",
     icon: IconHome,
-    href: "/",
+    href: "/dashboards/",
     children: [
       {
         id: uniqueId(),
         title: "Projects",
         icon: IconFiles,
-        href: "/apps/projects/index",
+        href: "/apps/projects/list",
       },
     ],
   },

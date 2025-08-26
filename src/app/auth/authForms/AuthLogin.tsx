@@ -92,8 +92,9 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         ...payload,
       });
 
+      console.log(result,'result')
       if (result?.ok) {
-        router.push("/apps/projects/index");
+        router.push("/apps/projects/list");
         toast.success("Logged in successfully!!");
       } else {
         toast.error(result?.error || "Login failed");

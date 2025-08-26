@@ -15,7 +15,7 @@ const Menuitems: NavGroup[] = [
     id: uniqueId(),
     title: "Projects",
     icon: IconFiles,
-    href: "/apps/projects/index",
+    href: "/apps/projects/list",
   },
 ];
 
