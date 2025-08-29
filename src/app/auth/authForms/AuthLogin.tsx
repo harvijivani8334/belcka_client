@@ -92,13 +92,17 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       const result = await signIn("credentials", {
         redirect: false,
         ...payload,
+        callbackUrl: "/apps/projects/list",
       });
 
-      if (result?.ok) {
-        router.push("/apps/projects/list");
+      if (result?.ok && result?.url) {
+        const redirectUrl = new URL(result.url!);
+        router.push(result.url);
         toast.success("Logged in successfully!!");
       } else {
-        toast.error(result?.error || "Login failed");
+        if (result?.error) {
+          toast.error(result.error);
+        }
       }
     } catch (error: any) {
       // const message =
