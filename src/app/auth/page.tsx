@@ -83,7 +83,7 @@ export default function Login() {
             lg: 5,
             xl: 4
           }}>
-          <Box p={4}>
+          <Box width={"50%"}>
             <AuthLogin
               title="Welcome to Belcka"
               subtext={

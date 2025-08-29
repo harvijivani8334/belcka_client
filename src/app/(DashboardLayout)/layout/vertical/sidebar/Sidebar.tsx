@@ -99,12 +99,12 @@ const Sidebar = () => {
               >
                 <Logo />
               </Box>
-              <Scrollbar sx={{ height: 'calc(100% - 244px)' }}>
+              {/* <Scrollbar sx={{ height: 'calc(100% - 244px)' }}> */}
                 {/* ------------------------------------------- */}
                 {/* Sidebar Items */}
                 {/* ------------------------------------------- */}
-                <SidebarItems />
-              </Scrollbar>
+                {/* <SidebarItems /> */}
+              {/* </Scrollbar> */}
               {isCollapse === "full-sidebar" ? <Box sx={{ px: 3, pb: 3 }}>
                 <SidebarProfile />
               </Box> : ''}
@@ -136,7 +136,7 @@ const Sidebar = () => {
           {/* ------------------------------------------- */}
           {/* Sidebar For Mobile */}
           {/* ------------------------------------------- */}
-          <SidebarItems />
+          {/* <SidebarItems /> */}
         </Drawer>
       )}
     </>

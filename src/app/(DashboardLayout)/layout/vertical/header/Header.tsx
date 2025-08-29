@@ -85,38 +85,6 @@ const Header = () => {
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
-        {/* ------------------------------------------- */}
-        {/* Toggle Button Sidebar */}
-        {/* ------------------------------------------- */}
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          onClick={() => {
-            // Toggle sidebar on both mobile and desktop based on screen size
-            if (lgUp) {
-              // For large screens, toggle between full-sidebar and mini-sidebar
-              isCollapse === "full-sidebar"
-                ? setIsCollapse("mini-sidebar")
-                : setIsCollapse("full-sidebar");
-            } else {
-              // For smaller screens, toggle mobile sidebar
-              setIsMobileSidebar(!isMobileSidebar);
-            }
-          }}
-        >
-          <IconMenu2 size="21" />
-        </IconButton>
-
-        {/* ------------------------------------------- */}
-        {/* Search Dropdown */}
-        {/* ------------------------------------------- */}
-        {lgUp ? <></> : null}
-        {lgUp ? (
-          <>
-            <Navigation />
-          </>
-        ) : null}
-
         <Box flexGrow={1} />
         <Stack direction="row" gap={1} alignItems="center">
           <Company />

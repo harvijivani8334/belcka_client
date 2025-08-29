@@ -48,7 +48,6 @@ export default function RootLayout({
       {/* ------------------------------------------- */}
       {/* Sidebar */}
       {/* ------------------------------------------- */}
-      {activeLayout === 'horizontal' ? "" : <Sidebar />}
       {/* ------------------------------------------- */}
       {/* Main Wrapper */}
       {/* ------------------------------------------- */}
@@ -67,7 +66,7 @@ export default function RootLayout({
         {/* ------------------------------------------- */}
         {activeLayout === 'horizontal' ? <HorizontalHeader /> : <Header />}
         {/* PageContent */}
-        {activeLayout === 'horizontal' ? <Navigation /> : ""}
+        {/* {activeLayout === 'horizontal' ? <Navigation /> : ""} */}
         <Container
           sx={{
             maxWidth: isLayout === "boxed" ? "1800px !important" : "100%!important",

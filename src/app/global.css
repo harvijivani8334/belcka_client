@@ -97,44 +97,8 @@ span.MuiTabs-indicator.mui-at3d3q{
     display: none;
 }
 
-.user-tabs{
-    padding: 10px 20px !important;
-    min-height: 20px !important;
-}
-
-.admin-settings{
-    padding: 10px 20px !important;
-    min-height: 20px !important;
-    color: #1e4db7;
-    border-radius: 7px;
-    margin-bottom: 7px;
-}
-
-.admin-settings.Mui-selected {
-    padding: 10px 20px !important;
-    min-height: 20px !important;
-    background-color: rgba(30, 77, 183, 0.08);
-    color: rgb(17, 20, 45);
-    border-radius: 7px;
-}
-
-.admin-settings-tabs {
-    width: 90%
-}
-
 input#project_id::placeholder {
     color: #ffffff;
-}
-
-.project-tabs {
-    overflow: visible;
-}
-
-.project-tabs{
-    color: #000;
-}
-.project-tabs .project_tabs{
-    color: #000 !important;
 }
 
 .project-tabs span.MuiTabs-indicator.mui-acba2e-MuiTabs-indicator{
@@ -170,16 +134,6 @@ input#project_id::placeholder {
     display: none;
 }
 
-.address-form ,.task-form{
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.task-form {
-    height: 95% !important;
-}
 .multi-ellipsis {
     display: -webkit-box;
     -webkit-line-clamp: 2; 
@@ -187,49 +141,9 @@ input#project_id::placeholder {
     overflow: hidden;
 }
 
-.archive-multi-ellipsis {
-    display: -webkit-box;
-    -webkit-line-clamp: 1; 
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-.address-form .mui-3q9hdc-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator{
-    display: none;
-}
-
 .MuiTypography-root {
     font-size: 0.875rem !important;
 }
-
-.trade-selection{
-    width: 90% !important;
-
-    .mui-1vsmqk7-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator, .mui-1uhhrmm-MuiAutocomplete-endAdornment, button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.MuiAutocomplete-popupIndicator.mui-tcwnsx, svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.mui-q7mezt{
-        display: none;
-    }
+.email_wrapper {
+    width: 100%;
 }
-
-.task_wrapper{
-    .task-input {
-        width: 80% !important;
-        .mui-14olbgo-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled ,.mui-14olbgo-MuiInputBase-input-MuiOutlinedInput-input, .mui-ao3ay5.Mui-disabled{
-            opacity: 1;
-            font-weight: 500;
-            -webkit-text-fill-color: #11142D !important;
-        }
-    }
-    .mui-454zd4-MuiInputBase-input-MuiOutlinedInput-input ,.mui-is1b5t .MuiOutlinedInput-root .MuiAutocomplete-input{
-        opacity: 1;
-        font-weight: 500;
-        -webkit-text-fill-color: #11142D !important;
-    }
-}
-.gantt-container .gantt-header {
-    position: sticky !important;
-    top: 0;
-    background: white;
-    z-index: 10;
-  }
-  ._3zRJQ, ._3KcaM{
-    fill: gray !important;
-  }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
@@ -13,9 +13,7 @@ import { loginType } from "@/app/(DashboardLayout)/types/auth/auth";
 const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
   const router = useRouter();
 
-  const [phone, setPhone] = useState("");
-  const [extension, setExtension] = useState("+44");
-  const [nationalPhone, setNationalPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [countdown, setCountdown] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -38,12 +36,14 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       setShowVerification(true);
 
       const payload = {
-        extension,
-        phone: nationalPhone,
+        email,
         invite_link: inviteToken ?? null,
       };
 
-      const response = await api.post("send-otp-login", payload);
+      const response = await api.post(
+        "company-clients/send-otp-login",
+        payload
+      );
       toast.success(response.data.message);
       setCountdown(30);
     } catch (error: any) {
@@ -58,14 +58,13 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!extension || !nationalPhone) {
-      toast.error("Please enter your phone number.");
+    if (!email) {
+      toast.error("Please enter email.");
       return;
     }
 
     const payload = {
-      extension,
-      phone: nationalPhone,
+      email,
       otp,
       is_web: true,
       invite_link: inviteToken ?? null,
@@ -75,7 +74,10 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       setLoading(true);
 
       if (!showVerification) {
-        const response = await api.post("send-otp-login", payload);
+        const response = await api.post(
+          "company-clients/send-otp-login",
+          payload
+        );
         toast.success(response.data.message);
         setShowVerification(true);
         setCountdown(30);
@@ -92,7 +94,6 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         ...payload,
       });
 
-      console.log(result,'result')
       if (result?.ok) {
         router.push("/apps/projects/list");
         toast.success("Logged in successfully!!");
@@ -108,8 +109,15 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     }
   };
 
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setEmail(value);
+  };
+
   return (
-    <>
+    <Box sx={{ width: "100%" }}>
       {title && (
         <Typography fontWeight="700" variant="h3" mb={1}>
           {title}
@@ -118,31 +126,19 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       {subtext}
 
       <form onSubmit={handleLogin}>
-        <Box>
+        <Box sx={{ width: "100%" }}>
           <CustomFormLabel htmlFor="phone">
-            What&apos;s your mobile number?
+            What&apos;s your email?
           </CustomFormLabel>
 
-          <Box mt={2}>
-            <PhoneInput
-              country={"gb"}
-              value={phone}
-              onChange={(value, country: any) => {
-                setPhone(value);
-                setExtension("+" + country.dialCode);
-
-                // Correct trimming of dial code from value
-                const numberOnly = value.startsWith(country.dialCode)
-                  ? value.slice(country.dialCode.length)
-                  : value;
-                setNationalPhone(numberOnly);
-              }}
-              inputStyle={{ width: "100%" }}
-              containerStyle={{ width: 300 }}
-              enableSearch
-              inputProps={{ required: true }}
-            />
-          </Box>
+          <CustomTextField
+            id="email"
+            name="email"
+            placeholder="Enter email.."
+            value={email}
+            onChange={handleChange}
+            className="email_wrapper"
+          />
         </Box>
 
         {showVerification && (
@@ -209,7 +205,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         </Box>
       </form>
       {subtitle}
-    </>
+    </Box>
   );
 };
 

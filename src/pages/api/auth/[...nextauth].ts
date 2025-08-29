@@ -9,8 +9,9 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        extension: { label: "Code", type: "text" },
-        phone: { label: "Phone", type: "number" },
+        is_web: { label: "Is web", type: "text"},
+        invite_link: { label: "Invite link", type: "text"},
+        email: { label: "Email", type: "text" },
         otp: { label: "Verification Code", type: "number" },
       },
       async authorize(credentials) {
