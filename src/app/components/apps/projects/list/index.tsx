@@ -128,7 +128,6 @@ const TablePagination = ({}) => {
   }, [projectId]);
 
   const fetchAddresses = async () => {
-    setLoading(true);
     try {
       const res = await api.get(`address/get?project_id=${projectId}`);
       if (res.data) {
@@ -137,7 +136,6 @@ const TablePagination = ({}) => {
     } catch (err) {
       console.error("Failed to fetch addresses", err);
     } finally {
-      setLoading(false);
     }
   };
   useEffect(() => {
@@ -163,18 +161,18 @@ const TablePagination = ({}) => {
     return dayjs(date ?? "").isValid() ? dayjs(date).format("DD/MM/YYYY") : "-";
   };
 
-  if (loading == true) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="300px"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // if (loading == true) {
+  //   return (
+  //     <Box
+  //       display="flex"
+  //       justifyContent="center"
+  //       alignItems="center"
+  //       minHeight="300px"
+  //     >
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
   return (
     <Box>
       <Stack

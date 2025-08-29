@@ -95,9 +95,8 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         callbackUrl: "/apps/projects/list",
       });
 
-      if (result?.ok && result?.url) {
-        const redirectUrl = new URL(result.url!);
-        router.push(result.url);
+      if (result?.ok) {
+        window.location.href = "/apps/projects/list";
         toast.success("Logged in successfully!!");
       } else {
         if (result?.error) {

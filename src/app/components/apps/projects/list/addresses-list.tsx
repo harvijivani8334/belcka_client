@@ -128,7 +128,6 @@ const AddressesList = ({
   useEffect(() => {
     if (projectId) {
       const fetchAddresses = async () => {
-        setLoading(true);
         try {
           const res = await api.get(`address/get?project_id=${projectId}`);
           if (res.data) {
@@ -137,7 +136,6 @@ const AddressesList = ({
         } catch (err) {
           console.error("Failed to fetch addresses", err);
         } finally {
-          setLoading(false);
         }
       };
       fetchAddresses();
