@@ -223,10 +223,6 @@ const TablePagination = ({}) => {
           >
             Activity
           </Button>
-
-          <Button color="primary" sx={{ width: "9%" }} variant="outlined">
-            History
-          </Button>
         </Grid>
       </Stack>
       <Divider />
