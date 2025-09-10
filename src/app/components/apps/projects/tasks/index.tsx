@@ -239,7 +239,7 @@ const CreateProjectTask: React.FC<CreateProjectTaskProps> = ({
       location_id: null,
       trade_id: null,
       company_id: userCompanyId,
-      is_attchment: false,
+      is_attchment: true,
       tasks: [],
     });
     setSelectedTasks([]);

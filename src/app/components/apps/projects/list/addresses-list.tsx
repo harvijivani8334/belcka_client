@@ -36,6 +36,7 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconDotsVertical,
+  IconDownload,
 } from "@tabler/icons-react";
 import api from "@/utils/axios";
 import CustomSelect from "@/app/components/forms/theme-elements/CustomSelect";
@@ -45,7 +46,6 @@ import CustomCheckbox from "@/app/components/forms/theme-elements/CustomCheckbox
 import { ProjectList } from "./index";
 
 import { WorksTab } from "./address-sidebar-tab/works-tab";
-import { DocumentsTab } from "./address-sidebar-tab/documents-tab";
 import { TradesTab } from "./address-sidebar-tab/trades-tab";
 import Link from "next/link";
 import { IconPlus } from "@tabler/icons-react";
@@ -97,20 +97,6 @@ const AddressesList = ({
     setAnchorEl(null);
   };
 
-  // useEffect(() => {
-  //   const fetchTrades = async () => {
-  //     try {
-  //       const res = await api.get(
-  //         `trade/get-trades?company_id=${user.company_id}`
-  //       );
-  //       if (res.data) setTrade(res.data.info);
-  //     } catch (err) {
-  //       console.error("Failed to fetch trades", err);
-  //     }
-  //   };
-  //   fetchTrades();
-  // }, []);
-
   const handleOpenCreateDrawer = () => {
     setFormData({
       address_id: null,
@@ -120,7 +106,7 @@ const AddressesList = ({
       company_id: user?.company_id || 0,
       duration: 0,
       rate: 0,
-      is_attchment: false,
+      is_attchment: true,
     });
     setDrawerOpen(true);
   };
@@ -173,7 +159,7 @@ const AddressesList = ({
           company_id: user?.company_id || 0,
           duration: 0,
           rate: 0,
-          is_attchment: false,
+          is_attchment: true,
         });
       } else {
         toast.error(result.data.message);
@@ -203,6 +189,29 @@ const AddressesList = ({
     return filtered;
   }, [data, searchTerm]);
 
+  const handleDownloadZip = async (addressId: number) => {
+    try {
+      const response = await api.get(
+        `address/download-tasks-zip/${addressId}`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data], { type: "application/zip" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `tasks_address_${addressId}.zip`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Download failed", error);
+    }
+  };
+
   const columnHelper = createColumnHelper<ProjectList>();
 
   const handleTabChange = (event: any, newValue: any) => {
@@ -217,9 +226,6 @@ const AddressesList = ({
           <Stack direction="row" alignItems="center" spacing={4}>
             <CustomCheckbox
               checked={selectedRowIds.size === data.length && data.length > 0}
-              // indeterminate={
-              //   selectedRowIds.size > 0 && selectedRowIds.size < data.length
-              // }
               onChange={(e) => {
                 if (e.target.checked) {
                   setSelectedRowIds(new Set(data.map((_, i) => i)));
@@ -312,11 +318,27 @@ const AddressesList = ({
       columnHelper.accessor("end_date", {
         id: "end_date",
         header: () => "End date",
-        cell: (info) => (
-          <Typography variant="h5" color="textPrimary">
-            {formatDate(info.getValue())}
-          </Typography>
-        ),
+        cell: (info) => {
+          const rowIndex = info.row.index;
+          const isRowSelected = selectedRowIds.has(rowIndex);
+
+          return (
+            <Box display="flex" alignItems="center" gap={6} justifyContent={"space-between"}>
+              <Typography variant="h5" color="textPrimary">
+                {formatDate(info.getValue())}
+              </Typography>
+              {isRowSelected && (
+                <IconButton
+                  size="small"
+                  color="error"
+                  onClick={() => handleDownloadZip(info.row.original.id)}
+                >
+                  <IconDownload size={24} />
+                </IconButton>
+              )}
+            </Box>
+          );
+        },
       }),
     ],
     [data, selectedRowIds]
@@ -558,7 +580,7 @@ const AddressesList = ({
                   <Typography variant="h6" fontWeight={700} noWrap>
                     {sidebarData.addressName}
                   </Typography>
-                  <Menu
+                  {/* <Menu
                     id="basic-menu"
                     anchorEl={anchorEl}
                     open={openMenu}
@@ -592,9 +614,9 @@ const AddressesList = ({
                         Add Task
                       </Link>
                     </MenuItem>
-                  </Menu>
+                  </Menu> */}
                 </Box>
-                <Box display="flex">
+                {/* <Box display="flex">
                   <IconButton
                     sx={{ margin: "0px" }}
                     id="basic-button"
@@ -605,7 +627,7 @@ const AddressesList = ({
                   >
                     <IconDotsVertical width={18} />
                   </IconButton>
-                </Box>
+                </Box> */}
               </Box>
               {/* Add task */}
               <CreateProjectTask
@@ -637,7 +659,7 @@ const AddressesList = ({
                   mb: 2,
                 }}
               >
-                {["Works", "Documents", "Trades"].map((label, index) => (
+                {["Works", "Trades"].map((label, index) => (
                   <Tab
                     key={label}
                     label={label}
@@ -669,13 +691,6 @@ const AddressesList = ({
                 />
               )}
               {value === 1 && (
-                <DocumentsTab
-                  companyId={sidebarData.companyId}
-                  addressId={sidebarData.addressId}
-                  projectId={sidebarData.projectId}
-                />
-              )}
-              {value === 2 && (
                 <TradesTab
                   companyId={sidebarData.companyId}
                   addressId={sidebarData.addressId}
