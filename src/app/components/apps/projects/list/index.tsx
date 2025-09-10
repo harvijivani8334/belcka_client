@@ -43,6 +43,7 @@ export type ProjectList = {
   status_int: number;
   status_text: string;
   check_ins: number;
+  image_count: number;
 };
 
 export interface TradeList {

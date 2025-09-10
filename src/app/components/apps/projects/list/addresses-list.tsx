@@ -20,6 +20,8 @@ import {
   Tabs,
   ListItemIcon,
   Menu,
+  Button,
+  Badge,
 } from "@mui/material";
 import {
   flexRender,
@@ -332,13 +334,20 @@ const AddressesList = ({
               <Typography variant="h5" color="textPrimary">
                 {formatDate(info.getValue())}
               </Typography>
-              <IconButton
-                size="small"
+              <Badge
+                badgeContent={info.row.original.image_count}
                 color="error"
-                onClick={() => handleDownloadZip(info.row.original.id)}
+                overlap="circular"
               >
-                <IconDownload size={24} />
-              </IconButton>
+                <Button
+                 variant="outlined"
+                 color="error"
+                 size="small"
+                  onClick={() => handleDownloadZip(info.row.original.id)}
+                >
+                  <IconDownload size={24} />
+                </Button>
+              </Badge>
             </Box>
           );
         },
