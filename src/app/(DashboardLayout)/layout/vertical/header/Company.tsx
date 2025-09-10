@@ -33,7 +33,7 @@ const Company = () => {
       setLoading(true);
       try {
         const response = await api.get(
-          `user/switch-company-list?user_id=${user.id}`
+          `user/switch-company-list?user_id=${user?.id}`
         );
         setCompanies(response.data.info);
       } catch (error) {
@@ -78,10 +78,10 @@ const Company = () => {
 
   return (
     <Box>
-      {user.company_image && (
-        <Tooltip title={user.company_name || "Select Company"}>
+      {user?.company_image && (
+        <Tooltip title={user?.company_name || "Select Company"}>
           <Avatar
-            src={user?.company_image ? `${user.company_image}` : ""}
+            src={user?.company_image ? `${user?.company_image}` : ""}
             alt={user.company_name || ""}
             sx={{
               width: 30,

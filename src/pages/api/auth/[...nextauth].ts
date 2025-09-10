@@ -112,8 +112,11 @@ export const authOptions: NextAuthOptions = {
     },
 
     async redirect({ url, baseUrl }) {
-    return baseUrl;
-  },
+      if (url.startsWith(`${baseUrl}/auth?`)) {
+        return url; // stay on /auth
+      }
+      return baseUrl; // otherwise dashboard
+    },
   },
 
   pages: {

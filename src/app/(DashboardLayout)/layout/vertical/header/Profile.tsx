@@ -61,7 +61,7 @@ const Profile = () => {
       >
         <Avatar
          src={user?.user_image ? `${user?.user_image}` : ""}
-          alt={user.first_name || ''}
+          alt={user?.first_name || ''}
           sx={{
             width: 30,
             height: 30,
@@ -127,10 +127,10 @@ const Profile = () => {
             {user?.first_name} {user?.last_name}
             </Typography>
             <Typography variant="h6" color="textSecondary" sx={{ textTransform:"capitalize"}}>
-              {user.trade_name ?? user.user_role}
+              {user?.trade_name ?? user?.user_role}
             </Typography>
             
-            {user.email ? <Typography
+            {user?.email ? <Typography
               variant="subtitle2"
               color="textSecondary"
               display="flex"

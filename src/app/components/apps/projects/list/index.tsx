@@ -66,10 +66,10 @@ const TablePagination = ({}) => {
 
   const status = ["Completed", "To Do", "In Progress"];
   const COOKIE_PREFIX = "project_";
-  const projectID = Cookies.get(COOKIE_PREFIX + user.id);
+  const projectID = Cookies.get(COOKIE_PREFIX + user?.id);
   const [formData, setFormData] = useState<any>({
     project_id: Number(projectID),
-    company_id: user.company_id,
+    company_id: user?.company_id,
     name: "",
   });
 
@@ -80,7 +80,7 @@ const TablePagination = ({}) => {
       if (res.data?.info) {
         setData(res.data.info);
 
-        const cookieProjectId = Cookies.get(COOKIE_PREFIX + user.id);
+        const cookieProjectId = Cookies.get(COOKIE_PREFIX + user?.id);
         const validProjectId = res.data.info.some(
           (p: any) => p.id === Number(cookieProjectId)
         )
@@ -97,11 +97,11 @@ const TablePagination = ({}) => {
 
   useEffect(() => {
     fetchProjects();
-  }, [user.company_id, user.id, projectId, projectID]);
+  }, [user?.company_id, user?.id, projectId, projectID]);
 
   useEffect(() => {
     if (projectId && user?.id) {
-      Cookies.set(COOKIE_PREFIX + user.id, projectId.toString(), {
+      Cookies.set(COOKIE_PREFIX + user?.id, projectId.toString(), {
         expires: 30,
       });
     }
