@@ -323,19 +323,22 @@ const AddressesList = ({
           const isRowSelected = selectedRowIds.has(rowIndex);
 
           return (
-            <Box display="flex" alignItems="center" gap={6} justifyContent={"space-between"}>
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={6}
+              justifyContent={"space-between"}
+            >
               <Typography variant="h5" color="textPrimary">
                 {formatDate(info.getValue())}
               </Typography>
-              {isRowSelected && (
-                <IconButton
-                  size="small"
-                  color="error"
-                  onClick={() => handleDownloadZip(info.row.original.id)}
-                >
-                  <IconDownload size={24} />
-                </IconButton>
-              )}
+              <IconButton
+                size="small"
+                color="error"
+                onClick={() => handleDownloadZip(info.row.original.id)}
+              >
+                <IconDownload size={24} />
+              </IconButton>
             </Box>
           );
         },
