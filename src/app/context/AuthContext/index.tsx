@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, Suspense } from "react";
 import InviteErrorPage from "@/app/components/InviteErrorPage";
 
 const PUBLIC_ROUTES = ["/auth", "/privacy-policy", "/app-info"];
@@ -41,9 +41,7 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
     }
   }, [status, cleanPath, router]);
 
-  if (status === "loading") {
-    return null;
-  }
+  if (status === "loading") return null;
 
   if (shouldShowInviteError) {
     return (
@@ -58,14 +56,10 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export default function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <Suspense fallback={null}>
       <AuthProviderInner>{children}</AuthProviderInner>
-    </>
+    </Suspense>
   );
 }
