@@ -210,6 +210,11 @@ const TablePagination = ({}) => {
               renderInput={(params) => (
                 <CustomTextField
                   {...params}
+                  InputProps={{
+                  ...params.InputProps,
+                  readOnly: true,
+                  style: { caretColor: "transparent" },
+                  }}
                   placeholder="Projects"
                   className="project-selection"
                 />
