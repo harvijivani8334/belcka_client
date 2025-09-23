@@ -1,12 +1,41 @@
 "use client";
 
-import { Button, Paper, Typography, Box } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  Button,
+  Paper,
+  Typography,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
 interface InviteErrorPageProps {
   onLogout: () => void;
 }
 
 export default function InviteErrorPage({ onLogout }: InviteErrorPageProps) {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isReady) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box
       display="flex"
