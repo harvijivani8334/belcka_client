@@ -23,23 +23,27 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   const user = session?.user as ExtendedUser | undefined;
   const inviteFromUrl = searchParams?.get("invite") ?? null;
   const cleanPath = pathname.split("?")[0];
-
+  const userInvite = user?.invite_link?.split("invite=")[1];
   const shouldShowInviteError = useMemo(() => {
     return (
       status === "authenticated" &&
-      !!inviteFromUrl &&
-      !!user?.invite_link &&
-      user.invite_link !== inviteFromUrl
+      inviteFromUrl !== null &&
+      !!userInvite &&
+      user.email !== undefined &&
+      userInvite !== inviteFromUrl
     );
-  }, [status, inviteFromUrl, user?.invite_link]);
+  }, [status, inviteFromUrl, userInvite, user?.email]);
 
   useEffect(() => {
-    if (status === "loading") return;
-
-    if (status === "unauthenticated" && !PUBLIC_ROUTES.includes(cleanPath)) {
-      router.replace("/auth");
+    if (
+      status === "authenticated" &&
+      inviteFromUrl !== null &&
+      userInvite === inviteFromUrl &&
+      cleanPath === "/auth"
+    ) {
+      router.replace("/apps/projects/list");
     }
-  }, [status, cleanPath, router]);
+  }, [status, inviteFromUrl, userInvite, cleanPath, router]);
 
   if (status === "loading") return null;
 
@@ -56,7 +60,11 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export default function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <Suspense fallback={null}>
       <AuthProviderInner>{children}</AuthProviderInner>
