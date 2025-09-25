@@ -54,7 +54,7 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   }
 
   if (status === "unauthenticated" && !PUBLIC_ROUTES.includes(cleanPath)) {
-    return null;
+    router.replace("/auth");
   }
 
   return <>{children}</>;
