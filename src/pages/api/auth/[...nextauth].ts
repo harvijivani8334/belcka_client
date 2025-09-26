@@ -74,7 +74,7 @@ export const authOptions: NextAuthOptions = {
       if (url.startsWith(`${baseUrl}/auth?`)) {
         return url; // stay on /auth
       }
-      return baseUrl; // otherwise dashboard
+      return `${baseUrl}/apps/projects/list`; // otherwise dashboard
     },
   },
 

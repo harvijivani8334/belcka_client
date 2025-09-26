@@ -35,15 +35,14 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   }, [status, inviteFromUrl, userInvite, user?.email]);
 
   useEffect(() => {
-    if (
-      status === "authenticated" &&
-      inviteFromUrl !== null &&
-      userInvite === inviteFromUrl &&
-      cleanPath === "/auth"
-    ) {
+    if (status === "authenticated" && cleanPath === "/") {
       router.replace("/apps/projects/list");
     }
-  }, [status, inviteFromUrl, userInvite, cleanPath, router]);
+
+    if (status === "unauthenticated" && !PUBLIC_ROUTES.includes(cleanPath)) {
+      signOut({ callbackUrl: "/auth" });
+    }
+  }, [status, cleanPath, inviteFromUrl, userInvite, router]);
 
   if (status === "loading") return null;
 
@@ -51,10 +50,6 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
     return (
       <InviteErrorPage onLogout={() => signOut({ callbackUrl: "/auth" })} />
     );
-  }
-
-  if (status === "unauthenticated" && !PUBLIC_ROUTES.includes(cleanPath)) {
-    router.replace("/auth");
   }
 
   return <>{children}</>;
