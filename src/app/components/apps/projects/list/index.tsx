@@ -9,11 +9,11 @@ import {
   IconButton,
   Stack,
   Drawer,
-  CircularProgress,
   Autocomplete,
-  Avatar,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
-import { IconX } from "@tabler/icons-react";
+import { IconChartPie, IconX } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useSession } from "next-auth/react";
@@ -25,6 +25,8 @@ import api from "@/utils/axios";
 import Cookies from "js-cookie";
 import "react-day-picker/dist/style.css";
 import "../../../../global.css";
+import { IconSearch } from "@tabler/icons-react";
+import DynamicGantt from "@/app/components/DynamicGantt";
 
 dayjs.extend(customParseFormat);
 
@@ -60,6 +62,7 @@ const TablePagination = ({}) => {
   const [projectId, setProjectId] = useState<number | null>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
 
   const session = useSession();
   const user = session.data?.user as User & { company_id?: number | null };
@@ -144,7 +147,7 @@ const TablePagination = ({}) => {
       fetchAddresses();
       fetchHistories();
     }
-  }, [projectId]);
+  }, [projectID, user?.id]);
 
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -160,6 +163,14 @@ const TablePagination = ({}) => {
 
   const formatDate = (date: string | undefined) => {
     return dayjs(date ?? "").isValid() ? dayjs(date).format("DD/MM/YYYY") : "-";
+  };
+
+  const handleRowClick = () => {
+    setDetailsOpen(true);
+  };
+
+  const closeDetails = () => {
+    setDetailsOpen(false);
   };
 
   // if (loading == true) {
@@ -222,6 +233,24 @@ const TablePagination = ({}) => {
               )}
             />
           </Box>
+          <TextField
+            id="search"
+            type="text"
+            size="small"
+            variant="outlined"
+            placeholder="Search..."
+            className="project_search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconSearch size={16} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
           <Button
             color="primary"
             sx={{ width: "9%" }}
@@ -230,10 +259,34 @@ const TablePagination = ({}) => {
           >
             Activity
           </Button>
+          <IconButton onClick={() => handleRowClick()}>
+            <IconChartPie size={24}></IconChartPie>
+          </IconButton>
         </Grid>
       </Stack>
       <Divider />
 
+      <Drawer
+        anchor="bottom"
+        open={detailsOpen}
+        onClose={closeDetails}
+        PaperProps={{
+          sx: {
+            borderRadius: 0,
+            height: "95vh",
+            boxShadow: "none",
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+            overflow: "hidden",
+          },
+        }}
+      >
+        <DynamicGantt
+          open={detailsOpen}
+          onClose={closeDetails}
+          projectId={projectId}
+        />
+      </Drawer>
       <AddressesList projectId={projectId} searchTerm={searchTerm} />
       <Drawer
         anchor="right"

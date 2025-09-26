@@ -34,26 +34,10 @@ export const authOptions: NextAuthOptions = {
           }
 
           const token = data.info.authToken;
-
-          const companyRes = await fetch(`${api}company/active-company`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          const companyData = await companyRes.json();
-
-          if (!companyRes.ok || !companyData?.info) {
-            throw new Error("Failed to fetch active company data");
-          }
           await getSession();
           return {
             ...data.info,
             token,
-            company_id: companyData.info.id,
-            company_name: companyData.info.name,
-            company_image: companyData.info.image,
           };
           
         } catch (err) {
@@ -76,36 +60,11 @@ export const authOptions: NextAuthOptions = {
       const api = process.env.NEXT_PUBLIC_API_URL;
       const user = token.user as any;
 
-      let companyData = null;
-
-      try {
-        const res = await fetch(`${api}company/active-company`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
-
-        const data = await res.json();
-        await getSession();
-        if (res.ok && data?.info) {
-          companyData = {
-            company_id: data.info.id,
-            company_name: data.info.name,
-            company_image: data.info.image,
-          };
-        } else {
-          console.error("Failed to fetch updated company data:", data);
-        }
-      } catch (err) {
-        console.error("Error fetching active company in session:", err);
-      }
 
       return {
         ...session,
         user: {
           ...user,
-          ...companyData,
         },
         accessToken: token.accessToken,
       };

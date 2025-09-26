@@ -2,29 +2,42 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import {
-  Avatar,
   Box,
   Button,
-  Chip,
   IconButton,
   InputAdornment,
   TextField,
   Typography,
   Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Autocomplete,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { IconChevronRight, IconFilter, IconSearch } from "@tabler/icons-react";
+import {
+  IconChevronRight,
+  IconFilter,
+  IconSearch,
+  IconX,
+} from "@tabler/icons-react";
 import api from "@/utils/axios";
 
 interface WorksTabProps {
   addressId: number;
   companyId: number;
 }
-
+type FilterState = {
+  type: string;
+};
 export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
   const [tabData, setTabData] = useState<any[]>([]);
-  const [searchUser, setSearchUser] = useState<string>("");
-
+  const [searchWork, setSearchWork] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [filterOptions, setFilterOptions] = useState<any[]>([]);
+  const [filters, setFilters] = useState<FilterState>({ type: "" });
+  const [tempFilters, setTempFilters] = useState<FilterState>(filters);
   const fetchWorkTabData = async () => {
     try {
       const res = await api.get("/project/get-works", {
@@ -41,6 +54,20 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
     }
   };
 
+  const fetchFilterOptions = async () => {
+    try {
+      const res = await api.get("/trade/web-company-trades", {
+        params: { company_id: companyId },
+      });
+      if (res.data?.IsSuccess) {
+        setFilterOptions(res.data.company_trades || []);
+      } else {
+        setFilterOptions([]);
+      }
+    } catch {
+      setFilterOptions([]);
+    }
+  };
   const formatHour = (val: string | number | null | undefined): string => {
     if (val === null || val === undefined) return "-";
     const num = parseFloat(val.toString());
@@ -61,22 +88,31 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
   useEffect(() => {
     if (addressId) {
       fetchWorkTabData();
+      fetchFilterOptions();
     }
   }, [addressId]);
 
   const filteredData = useMemo(() => {
-    const search = searchUser.trim().toLowerCase();
-    if (!search) return tabData;
-    return tabData.filter(
-      (item) =>
-        item.user_name?.toLowerCase().includes(search) ||
-        item.work_name?.toLowerCase().includes(search)
-    );
-  }, [searchUser, tabData]);
+    let data = [...tabData];
+
+    if (filters.type) {
+      data = data.filter((item) => item.trade_id?.toString() === filters.type);
+    }
+
+    if (searchWork.trim()) {
+      const search = searchWork.trim().toLowerCase();
+      data = data.filter(
+        (item) =>
+          item.name?.toLowerCase().includes(search) ||
+          item.trade_name?.toLowerCase().includes(search)
+      );
+    }
+
+    return data;
+  }, [searchWork, tabData, filters]);
 
   return (
     <Box>
-      {/* Search bar and filter button */}
       <Stack
         direction="row"
         alignItems="center"
@@ -87,8 +123,8 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
         <TextField
           placeholder="Search..."
           size="small"
-          value={searchUser}
-          onChange={(e) => setSearchUser(e.target.value)}
+          value={searchWork}
+          onChange={(e) => setSearchWork(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -98,11 +134,92 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
           }}
           sx={{ width: { xs: "100%", sm: "80%" }, mb: { xs: 2, sm: 0 } }}
         />
-        {/*<Button variant="contained" onClick={() => setOpen(true)}>*/}
-        {/*    <IconFilter width={18} />*/}
-        {/*</Button>*/}
+        <Button variant="contained" onClick={() => setOpen(true)}>
+          <IconFilter width={18} />
+        </Button>
       </Stack>
 
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle sx={{ m: 0, position: "relative", overflow: "visible" }}>
+          Filters
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpen(false)}
+            size="large"
+            sx={{
+              position: "absolute",
+              right: 12,
+              top: 8,
+              color: (theme) => theme.palette.grey[900],
+              backgroundColor: "transparent",
+              zIndex: 10,
+              width: 50,
+              height: 50,
+            }}
+          >
+            <IconX size={40} style={{ width: 40, height: 40 }} />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent>
+          <Stack spacing={2} mt={1}>
+            <Autocomplete
+              options={filterOptions}
+              getOptionLabel={(opt: any) => opt.name || ""}
+              value={
+                filterOptions.find(
+                  (opt) => opt.id.toString() === tempFilters.type
+                ) || null
+              }
+              onChange={(_, newValue) => {
+                console.log(newValue, "newValue");
+                setTempFilters({
+                  ...tempFilters,
+                  type: newValue ? newValue.id.toString() : "",
+                });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Trade Type"
+                  placeholder="Search trade type..."
+                  fullWidth
+                />
+              )}
+              clearOnEscape
+              fullWidth
+            />
+          </Stack>
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setFilters({ type: "" });
+              setTempFilters({ type: "" });
+              setOpen(false);
+            }}
+            color="inherit"
+          >
+            Clear
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => {
+              setFilters(tempFilters);
+              setOpen(false);
+            }}
+          >
+            Apply
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* List of works */}
       {filteredData.length > 0 ? (
         filteredData.map((work, idx) => (
@@ -127,6 +244,7 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
                 },
               }}
             >
+              {/* Labels */}
               <Box
                 sx={{
                   position: "absolute",
@@ -211,6 +329,7 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
                 </Box>
               </Box>
 
+              {/* Work row */}
               <Stack
                 direction="row"
                 spacing={2}
@@ -225,7 +344,6 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
                     {work.name}
                   </Typography>
                 </Box>
-
                 {parseFloat(work.total_work_hours) > 0 && (
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Typography fontWeight="bold" fontSize="1.25rem">

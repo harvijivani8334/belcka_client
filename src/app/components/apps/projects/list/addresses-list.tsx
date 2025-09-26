@@ -226,16 +226,6 @@ const AddressesList = ({
         id: "name",
         header: () => (
           <Stack direction="row" alignItems="center" spacing={4}>
-            <CustomCheckbox
-              checked={selectedRowIds.size === data.length && data.length > 0}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setSelectedRowIds(new Set(data.map((_, i) => i)));
-                } else {
-                  setSelectedRowIds(new Set());
-                }
-              }}
-            />
             <Typography variant="subtitle2" fontWeight="inherit">
               Address
             </Typography>
@@ -253,15 +243,6 @@ const AddressesList = ({
               spacing={4}
               sx={{ pl: 0.2 }}
             >
-              <CustomCheckbox
-                checked={isChecked}
-                onChange={() => {
-                  const newSelected = new Set(selectedRowIds);
-                  if (isChecked) newSelected.delete(row.index);
-                  else newSelected.add(row.index);
-                  setSelectedRowIds(newSelected);
-                }}
-              />
               <Typography
                 variant="h5"
                 onClick={() => {
@@ -340,9 +321,9 @@ const AddressesList = ({
                 overlap="circular"
               >
                 <Button
-                 variant="outlined"
-                 color="error"
-                 size="small"
+                  variant="outlined"
+                  color="error"
+                  size="small"
                   onClick={() => handleDownloadZip(info.row.original.id)}
                 >
                   <IconDownload size={24} />
