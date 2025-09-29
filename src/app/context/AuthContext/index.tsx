@@ -40,7 +40,7 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
     }
 
     if (status === "unauthenticated" && !PUBLIC_ROUTES.includes(cleanPath)) {
-      signOut({ callbackUrl: "/auth" });
+      router.replace("/auth");
     }
   }, [status, cleanPath, inviteFromUrl, userInvite, router]);
 
