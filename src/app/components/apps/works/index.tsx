@@ -303,7 +303,7 @@ export default function WorkDetailPage({
                         transform: "scale(1.2)",
                       },
                     }}
-                      onMouseEnter={(e) => {
+                    onMouseEnter={(e) => {
                       setHoveredImage(img.image_url);
                       const rect = e.currentTarget.getBoundingClientRect();
                       setHoverPosition({
@@ -334,11 +334,10 @@ export default function WorkDetailPage({
           <Box
             sx={{
               position: "fixed",
-              top: 200,
-              left: "45%",
-              width: "500px",
+              top: "30%",
+              left: "35%",
+              width: "25%",
               maxHeight: "80vh",
-              zIndex: 2000,
               border: "1px solid #ccc",
               borderRadius: 2,
               overflow: "hidden",
