@@ -32,7 +32,11 @@ export default function WorkDetailPage({
   const [loading, setLoading] = useState<boolean>(false);
   const [work, setWork] = useState<any>([]);
   const router = useRouter();
-
+  const [hoveredImage, setHoveredImage] = useState<string | null>(null);
+  const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
   useEffect(() => {
     console.log("Props received:", { workId, companyId, addressId });
     if (workId !== null && companyId && addressId) {
@@ -251,6 +255,15 @@ export default function WorkDetailPage({
                         transform: "scale(1.2)",
                       },
                     }}
+                    onMouseEnter={(e) => {
+                      setHoveredImage(img.image_url);
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setHoverPosition({
+                        x: rect.right + 10,
+                        y: rect.top,
+                      });
+                    }}
+                    onMouseLeave={() => setHoveredImage(null)}
                   >
                     <Image
                       width={150}
@@ -290,6 +303,15 @@ export default function WorkDetailPage({
                         transform: "scale(1.2)",
                       },
                     }}
+                      onMouseEnter={(e) => {
+                      setHoveredImage(img.image_url);
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setHoverPosition({
+                        x: rect.right + 10,
+                        y: rect.top,
+                      });
+                    }}
+                    onMouseLeave={() => setHoveredImage(null)}
                   >
                     <Image
                       width={150}
@@ -305,6 +327,31 @@ export default function WorkDetailPage({
                   </Grid>
                 ))}
             </Grid>
+          </Box>
+        )}
+        {/* Hover Preview */}
+        {hoveredImage && (
+          <Box
+            sx={{
+              position: "fixed",
+              top: 200,
+              left: "45%",
+              width: "500px",
+              maxHeight: "80vh",
+              zIndex: 2000,
+              border: "1px solid #ccc",
+              borderRadius: 2,
+              overflow: "hidden",
+              backgroundColor: "#fff",
+              boxShadow: 3,
+            }}
+          >
+            <Box
+              component="img"
+              src={hoveredImage}
+              alt="Preview"
+              sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </Box>
         )}
       </Box>

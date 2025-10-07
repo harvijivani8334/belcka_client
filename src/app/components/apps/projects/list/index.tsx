@@ -149,9 +149,9 @@ const TablePagination = ({}) => {
   }, [projectID, user?.id]);
 
   useEffect(() => {
-  if (dialogOpen == true) {
-    fetchHistories();
-  }
+    if (dialogOpen == true) {
+      fetchHistories();
+    }
   }, [dialogOpen]);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -300,11 +300,11 @@ const TablePagination = ({}) => {
           sx: {
             width: 500,
             maxWidth: "100%",
-             "& .MuiDrawer-paper": {
-            width: 500,
-            padding: 2,
-            backgroundColor: "#f9f9f9",
-          },
+            "& .MuiDrawer-paper": {
+              width: 500,
+              padding: 2,
+              backgroundColor: "#f9f9f9",
+            },
           },
         }}
       >
@@ -384,7 +384,7 @@ const TablePagination = ({}) => {
                         sx={{
                           width: "100%",
                           lineHeight: "10px",
-                          height: "100px",
+                          height: "80px",
                           borderRadius: "25px",
                           boxShadow: "rgb(33 33 33 / 12%) 0px 4px 4px 0px",
                           border: "1px solid rgb(240 240 240)",
@@ -412,7 +412,7 @@ const TablePagination = ({}) => {
                           display="initial"
                           width="100%"
                           textAlign="start"
-                          mt={1}
+                          m={0}
                         >
                           <Typography
                             fontSize="14px"
@@ -425,6 +425,7 @@ const TablePagination = ({}) => {
                               fontSize: "12px",
                               textAlign: "end",
                               color: "GrayText",
+                              margin: 0,
                             }}
                             color="textSecondary"
                           >
