@@ -145,10 +145,14 @@ const TablePagination = ({}) => {
   useEffect(() => {
     if (projectId) {
       fetchAddresses();
-      fetchHistories();
     }
   }, [projectID, user?.id]);
 
+  useEffect(() => {
+  if (dialogOpen == true) {
+    fetchHistories();
+  }
+  }, [dialogOpen]);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // Scroll active tab into view whenever value changes
@@ -294,8 +298,13 @@ const TablePagination = ({}) => {
         onClose={() => setDialogOpen(false)}
         PaperProps={{
           sx: {
-            width: 350,
+            width: 500,
             maxWidth: "100%",
+             "& .MuiDrawer-paper": {
+            width: 500,
+            padding: 2,
+            backgroundColor: "#f9f9f9",
+          },
           },
         }}
       >

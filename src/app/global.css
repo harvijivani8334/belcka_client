@@ -147,3 +147,7 @@ input#project_id::placeholder {
 .email_wrapper {
     width: 100%;
 }
+
+.f-18{
+    font-size: 1.125rem !important;
+}

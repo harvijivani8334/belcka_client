@@ -23,6 +23,8 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import api from "@/utils/axios";
+import { useRouter } from "next/navigation";
+import WorkDetailPage from "../../../works";
 
 interface WorksTabProps {
   addressId: number;
@@ -38,6 +40,8 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
   const [filterOptions, setFilterOptions] = useState<any[]>([]);
   const [filters, setFilters] = useState<FilterState>({ type: "" });
   const [tempFilters, setTempFilters] = useState<FilterState>(filters);
+  const [openSidebar, setOpenSidebar] = useState(false);
+  const [selectedWorkId, setSelectedWorkId] = useState(null);
   const fetchWorkTabData = async () => {
     try {
       const res = await api.get("/project/get-works", {
@@ -83,6 +87,11 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
     return text.length > maxLength
       ? `${text.substring(0, maxLength)}...`
       : text;
+  };
+
+  const handleWorkClick = (workId: any) => {
+    setSelectedWorkId(workId);
+    setOpenSidebar(true);
   };
 
   useEffect(() => {
@@ -220,13 +229,22 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <WorkDetailPage
+        open={openSidebar}
+        onClose={() => setOpenSidebar(false)}
+        workId={selectedWorkId}
+        companyId={companyId}
+        addressId={addressId}
+      />
+
       {/* List of works */}
       {filteredData.length > 0 ? (
         filteredData.map((work, idx) => (
           <Box
             key={idx}
             mb={2}
-            sx={{ display: "flex", flexDirection: "column" }}
+            sx={{ display: "flex", flexDirection: "column", cursor: "pointer" }}
+            onClick={() => handleWorkClick(work.id)}
           >
             <Box
               sx={{
@@ -350,7 +368,10 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
                       {formatHour(work.total_work_hours)} H
                     </Typography>
                     <IconButton>
-                      <IconChevronRight fontSize="small" />
+                      <IconChevronRight
+                        fontSize="small"
+                        onClick={(e) => e.stopPropagation()}
+                      />
                     </IconButton>
                   </Stack>
                 )}

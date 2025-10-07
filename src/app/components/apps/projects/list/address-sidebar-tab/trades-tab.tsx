@@ -279,26 +279,14 @@ export const TradesTab = ({
               >
                 {trade.trade_name}
               </Box>
-
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Avatar
-                  src={trade.user_thumb_image || "/default-avatar.png"}
-                  alt={trade.user_name}
-                  sx={{ width: 56, height: 56 }}
-                />
-                <Box>
-                  <Typography fontWeight="bold">{trade.user_name}</Typography>
-                </Box>
-              </Stack>
-
-              <Stack direction="row" spacing={1} alignItems="center">
+              <Box  display="flex" justifyContent={"space-between"} alignItems="center" width={"100%"}>
                 <Typography fontWeight="bold" fontSize="1.25rem">
                   {formatHour(trade.total_work_hours)} H
                 </Typography>
                 <IconButton>
                   <IconChevronRight fontSize="small" />
                 </IconButton>
-              </Stack>
+              </Box>
             </Box>
           </Box>
         ))

@@ -81,37 +81,12 @@ const AddressesList = ({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [sidebarData, setSidebarData] = useState<any>(null);
   const [value, setValue] = useState<number>(0);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const openMenu = Boolean(anchorEl);
-
   const [formData, setFormData] = useState<any>({});
   const session = useSession();
   const user = session.data?.user as User & { company_id?: number | null };
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [trade, setTrade] = useState<TradeList[]>([]);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleOpenCreateDrawer = () => {
-    setFormData({
-      address_id: null,
-      type_of_work_id: 0,
-      location_id: null,
-      trade_id: null,
-      company_id: user?.company_id || 0,
-      duration: 0,
-      rate: 0,
-      is_attchment: true,
-    });
-    setDrawerOpen(true);
-  };
 
   useEffect(() => {
     if (projectId) {
