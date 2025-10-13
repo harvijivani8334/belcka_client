@@ -26,6 +26,7 @@ import { useState } from "react";
 import Navigation from "./Navigation";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
+import Image from "next/image";
 
 const Header = () => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
@@ -85,6 +86,13 @@ const Header = () => {
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
+        <Image
+          src={"/images/logos/belcka.png"}
+          alt="logo"
+          height={70}
+          width={150}
+          priority
+        />
         <Box flexGrow={1} />
         <Stack direction="row" gap={1} alignItems="center">
           <Company />

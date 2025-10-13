@@ -12,19 +12,9 @@ const Logo = () => {
     useContext(CustomizerContext);
   const TopbarHeight = config.topbarHeight;
 
-  const LinkStyled = styled(Link)(() => ({
-    height: TopbarHeight,
-    width: isCollapse == "mini-sidebar" && !isSidebarHover ? "65px" : "150px",
-    overflow: "hidden",
-    display: "block",
-    marginBottom: "10px",
-    marginTop:'5px',
-    marginLeft:"-5px"
-  }));
-
   if (activeDir === "ltr") {
     return (
-      <LinkStyled href="/">
+      <>
         {activeMode === "dark" ? (
           <Image
             src={"/images/logos/belcka.png"}
@@ -42,12 +32,12 @@ const Logo = () => {
             priority
           />
         )}
-      </LinkStyled>
+      </>
     );
   }
 
   return (
-    <LinkStyled href="/">
+    <>
       {activeMode === "dark" ? (
         <Image
           src={"/images/logos/belcka.png"}
@@ -65,7 +55,7 @@ const Logo = () => {
           priority
         />
       )}
-    </LinkStyled>
+    </>
   );
 };
 
