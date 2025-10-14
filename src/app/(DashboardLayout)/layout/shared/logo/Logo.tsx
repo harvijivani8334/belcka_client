@@ -17,18 +17,20 @@ const Logo = () => {
       <>
         {activeMode === "dark" ? (
           <Image
-            src={"/images/logos/belcka.png"}
+            src={"/images/logos/belcka.svg"}
             alt="logo"
             height={TopbarHeight}
             width={150}
+            style={{ marginLeft: 20 }}
             priority
           />
         ) : (
           <Image
-            src={"/images/logos/belcka.png"}
+            src={"/images/logos/belcka.svg"}
             alt="logo"
             height={TopbarHeight}
             width={150}
+            style={{ marginLeft: 20 }}
             priority
           />
         )}
@@ -40,18 +42,20 @@ const Logo = () => {
     <>
       {activeMode === "dark" ? (
         <Image
-          src={"/images/logos/belcka.png"}
+          src={"/images/logos/belcka.svg"}
           alt="logo"
           height={TopbarHeight}
           width={150}
+          style={{ marginLeft: 20 }}
           priority
         />
       ) : (
         <Image
-          src={"/images/logos/belcka.png"}
+          src={"/images/logos/belcka.svg"}
           alt="logo"
           height={TopbarHeight}
           width={150}
+          style={{ marginLeft: 20 }}
           priority
         />
       )}

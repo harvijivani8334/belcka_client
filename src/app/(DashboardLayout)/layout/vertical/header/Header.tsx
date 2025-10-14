@@ -87,10 +87,11 @@ const Header = () => {
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
         <Image
-          src={"/images/logos/belcka.png"}
+          src={"/images/logos/belcka.svg"}
           alt="logo"
           height={70}
           width={150}
+          style={{ marginLeft: 20}}
           priority
         />
         <Box flexGrow={1} />
