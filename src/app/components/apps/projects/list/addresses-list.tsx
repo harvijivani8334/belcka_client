@@ -55,6 +55,7 @@ import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 import CreateProjectTask from "../tasks";
 import toast from "react-hot-toast";
+import { DocumentsTab } from "./address-sidebar-tab/documents-tab";
 
 dayjs.extend(customParseFormat);
 
@@ -627,7 +628,7 @@ const AddressesList = ({
                   mb: 2,
                 }}
               >
-                {["Works", "Trades"].map((label, index) => (
+                {["Works", "Documents", "Trades"].map((label, index) => (
                   <Tab
                     key={label}
                     label={label}
@@ -659,6 +660,13 @@ const AddressesList = ({
                 />
               )}
               {value === 1 && (
+                <DocumentsTab
+                  companyId={sidebarData.companyId}
+                  addressId={sidebarData.addressId}
+                  projectId={sidebarData.projectId}
+                />
+              )}
+              {value === 2 && (
                 <TradesTab
                   companyId={sidebarData.companyId}
                   addressId={sidebarData.addressId}

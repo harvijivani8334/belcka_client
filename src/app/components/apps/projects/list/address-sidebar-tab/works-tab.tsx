@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
   Autocomplete,
+  Badge,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import {
@@ -25,6 +26,7 @@ import {
 import api from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import WorkDetailPage from "../../../works";
+import { IconPaperclip } from "@tabler/icons-react";
 
 interface WorksTabProps {
   addressId: number;
@@ -270,80 +272,109 @@ export const WorksTab = ({ addressId, companyId }: WorksTabProps) => {
                   left: 16,
                   right: 16,
                   display: "flex",
+                  justifyContent: "space-between",
                   gap: 1,
                   flexWrap: "wrap",
                   zIndex: 1,
                 }}
               >
-                <Tooltip title={work.trade_name || ""} arrow>
+                <Box display={"flex"} gap={1}>
+                  <Tooltip title={work.trade_name || ""} arrow>
+                    <Box
+                      sx={{
+                        backgroundColor: "#FF7A00",
+                        border: "1px solid #FF7A00",
+                        color: "#fff",
+                        fontSize: "11px",
+                        fontWeight: 500,
+                        px: 1,
+                        py: 0.2,
+                        borderRadius: "999px",
+                        maxWidth: "80px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {truncateText(work.trade_name)}
+                    </Box>
+                  </Tooltip>
+
                   <Box
                     sx={{
-                      backgroundColor: "#FF7A00",
-                      border: "1px solid #FF7A00",
+                      backgroundColor: "#7523D3",
+                      border: "1px solid #7523D3",
                       color: "#fff",
                       fontSize: "11px",
                       fontWeight: 500,
                       px: 1,
                       py: 0.2,
                       borderRadius: "999px",
-                      maxWidth: "80px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      cursor: "pointer",
                     }}
                   >
-                    {truncateText(work.trade_name)}
+                    {work.duration}
                   </Box>
-                </Tooltip>
 
-                <Box
-                  sx={{
-                    backgroundColor: "#7523D3",
-                    border: "1px solid #7523D3",
-                    color: "#fff",
-                    fontSize: "11px",
-                    fontWeight: 500,
-                    px: 1,
-                    py: 0.2,
-                    borderRadius: "999px",
-                  }}
-                >
-                  {work.duration}
+                  <Box
+                    sx={{
+                      backgroundColor:
+                        work.repeatable_job === "Task" ? "#32A852" : "#FF008C",
+                      border:
+                        work.repeatable_job === "Task"
+                          ? "1px solid #32A852"
+                          : "1px solid #FF008C",
+                      color: "#fff",
+                      fontSize: "11px",
+                      fontWeight: 500,
+                      px: 1,
+                      py: 0.2,
+                      borderRadius: "999px",
+                    }}
+                  >
+                    {work.repeatable_job === "Task" ? work.rate : "Job"}
+                  </Box>
+
+                  <Box
+                    sx={{
+                      backgroundColor: work.status_color,
+                      border: `1px solid ${work.status_color}`,
+                      color: "#fff",
+                      fontSize: "11px",
+                      fontWeight: 500,
+                      px: 1,
+                      py: 0.2,
+                      borderRadius: "999px",
+                    }}
+                  >
+                    {work.status_text}
+                  </Box>
                 </Box>
-
-                <Box
-                  sx={{
-                    backgroundColor:
-                      work.repeatable_job === "Task" ? "#32A852" : "#FF008C",
-                    border:
-                      work.repeatable_job === "Task"
-                        ? "1px solid #32A852"
-                        : "1px solid #FF008C",
-                    color: "#fff",
-                    fontSize: "11px",
-                    fontWeight: 500,
-                    px: 1,
-                    py: 0.2,
-                    borderRadius: "999px",
-                  }}
-                >
-                  {work.repeatable_job === "Task" ? work.rate : "Job"}
-                </Box>
-
-                <Box
-                  sx={{
-                    backgroundColor: work.status_color,
-                    border: `1px solid ${work.status_color}`,
-                    color: "#fff",
-                    fontSize: "11px",
-                    fontWeight: 500,
-                    px: 1,
-                    py: 0.2,
-                    borderRadius: "999px",
-                  }}
-                >
-                  {work.status_text}
+                <Box display={"flex"} gap={1} alignItems={"center"}>
+                  <Badge
+                    badgeContent={work.count}
+                    color="error"
+                    overlap="circular"
+                  >
+                    {work.count > 0 && (
+                      <IconButton
+                        sx={{
+                          minHeight: "20px !important",
+                          height: "10px",
+                          top: "3px",
+                          backgroundColor: "white",
+                          "&:hover": {
+                            backgroundColor: "white !important",
+                          },
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <IconPaperclip color="#1e4db7" />
+                      </IconButton>
+                    )}
+                  </Badge>
                 </Box>
               </Box>
 
