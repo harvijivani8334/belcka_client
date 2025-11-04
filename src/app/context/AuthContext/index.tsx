@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, Suspense } from "react";
+import { useEffect, useMemo, Suspense, useState } from "react";
 import InviteErrorPage from "@/app/components/InviteErrorPage";
 
 const PUBLIC_ROUTES = ["/auth", "/privacy-policy", "/app-info"];
@@ -24,6 +24,17 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   const inviteFromUrl = searchParams?.get("invite") ?? null;
   const cleanPath = pathname.split("?")[0];
   const userInvite = user?.invite_link?.split("invite=")[1];
+  const [fullUrl, setFullUrl] = useState("");
+
+  useEffect(() => {
+    const queryString = searchParams ? searchParams.toString() : "";
+    const origin = window.location.origin;
+    const completeUrl = queryString
+      ? `${origin}${pathname}?${queryString}`
+      : `${origin}${pathname}`;
+    setFullUrl(completeUrl);
+  }, [pathname, searchParams]);
+
   const shouldShowInviteError = useMemo(() => {
     return (
       status === "authenticated" &&
@@ -48,7 +59,8 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
 
   if (shouldShowInviteError) {
     return (
-      <InviteErrorPage onLogout={() => signOut({ callbackUrl: "/auth" })} />
+      signOut({ callbackUrl: `${fullUrl}` })
+      // <InviteErrorPage onLogout={() => signOut({ callbackUrl: "/auth" })} />
     );
   }
 
