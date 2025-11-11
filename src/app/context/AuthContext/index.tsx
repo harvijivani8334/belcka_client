@@ -4,10 +4,13 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, Suspense, useState } from "react";
 import InviteErrorPage from "@/app/components/InviteErrorPage";
+import api from "@/utils/axios";
+import toast from "react-hot-toast";
 
 const PUBLIC_ROUTES = ["/auth", "/privacy-policy", "/app-info"];
 
 type ExtendedUser = {
+  id: number;
   name?: string | null;
   email?: string | null;
   image?: string | null;
@@ -25,6 +28,8 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   const cleanPath = pathname.split("?")[0];
   const userInvite = user?.invite_link?.split("invite=")[1];
   const [fullUrl, setFullUrl] = useState("");
+  const [isExpired, setIsExpired] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     const queryString = searchParams ? searchParams.toString() : "";
@@ -34,6 +39,33 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
       : `${origin}${pathname}`;
     setFullUrl(completeUrl);
   }, [pathname, searchParams]);
+
+  const getUserData = async () => {
+    try {
+      const response = await api.get(
+        `company-clients/invitation-link?user_id=${user?.id}`
+      );
+      if (response.data.IsSuccess) {
+        setIsExpired(response.data.info.is_expired);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setChecked(true);
+    }
+  };
+  useEffect(() => {
+    if (status === "authenticated" && user?.id) {
+      getUserData();
+    }
+  }, [status, user?.id]);
+
+  useEffect(() => {
+    if (isExpired) {
+      toast.error("Your invitation link has been expired!");
+      signOut({ callbackUrl: "/auth" });
+    }
+  }, [isExpired]);
 
   const shouldShowInviteError = useMemo(() => {
     return (
@@ -58,10 +90,8 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   if (status === "loading") return null;
 
   if (shouldShowInviteError) {
-    return (
-      signOut({ callbackUrl: `${fullUrl}` })
-      // <InviteErrorPage onLogout={() => signOut({ callbackUrl: "/auth" })} />
-    );
+    return signOut({ callbackUrl: `${fullUrl}` });
+    // <InviteErrorPage onLogout={() => signOut({ callbackUrl: "/auth" })} />
   }
 
   return <>{children}</>;
