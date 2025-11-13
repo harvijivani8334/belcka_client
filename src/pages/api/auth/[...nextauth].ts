@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
 
           const res = await fetch(`${api}company-clients/login`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" ,"is_web" : 'true'},
             body: JSON.stringify(credentials),
           });
 
@@ -57,9 +57,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      const api = process.env.NEXT_PUBLIC_API_URL;
       const user = token.user as any;
-
 
       return {
         ...session,
