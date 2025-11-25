@@ -76,16 +76,20 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
       userInvite !== inviteFromUrl
     );
   }, [status, inviteFromUrl, userInvite, user?.email]);
-
   useEffect(() => {
-    if (status === "authenticated" && cleanPath === "/") {
-      router.replace("/apps/projects/list");
+    if (status === "loading") return;
+
+    if (status === "authenticated") {
+      if (cleanPath === "/") {
+        router.replace("/apps/projects/list");
+      }
+      return;
     }
 
     if (status === "unauthenticated" && !PUBLIC_ROUTES.includes(cleanPath)) {
       router.replace("/auth");
     }
-  }, [status, cleanPath, inviteFromUrl, userInvite, router]);
+  }, [status, cleanPath]);
 
   if (status === "loading") return null;
 
