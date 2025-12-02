@@ -5,8 +5,11 @@ export function logoutWithInviteRedirect() {
 
   const saved = localStorage.getItem("invite_redirect_url");
 
+  const authBaseUrl = process.env.NEXT_PUBLIC_AUTH_URL || "/auth";
+
   const redirectUrl =
-    saved ? saved : `${process.env.NEXT_PUBLIC_AUTH_URL}auth`;
+    saved ||
+    authBaseUrl; 
 
   return signOut({ callbackUrl: redirectUrl });
 }
