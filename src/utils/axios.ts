@@ -1,36 +1,38 @@
 import axios from "axios";
-import { getSession, signOut } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { logoutWithInviteRedirect } from "@/utils/logout";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-// Request interceptor: attach access token from NextAuth session
-  api.interceptors.request.use(
-    async (config) => {
-      const session = await getSession();
+// Request interceptor
+api.interceptors.request.use(
+  async (config) => {
+    const session = await getSession();
 
-      if ((session as any)?.accessToken) {
-        config.headers = config.headers || {}; // ensure it exists
-        config.headers['authorization'] = `Bearer ${(session as any).accessToken}`;
-        config.headers['is_web'] = `true`;
-      }
+    if ((session as any)?.accessToken) {
+      config.headers = config.headers || {};
+      config.headers["authorization"] = `Bearer ${(session as any).accessToken}`;
+      config.headers["is_web"] = `true`;
+    }
 
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// Response interceptor: handle 401 Unauthorized globally
+// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      await signOut({ callbackUrl: "/auth" });
+      logoutWithInviteRedirect();
+      return;
     }
-    toast.error(error.response.data?.message);
 
+    toast.error(error.response?.data?.message);
     return Promise.reject(error);
   }
 );

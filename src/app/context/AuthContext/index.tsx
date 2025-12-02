@@ -1,11 +1,11 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, Suspense, useState } from "react";
-import InviteErrorPage from "@/app/components/InviteErrorPage";
 import api from "@/utils/axios";
 import toast from "react-hot-toast";
+import { logoutWithInviteRedirect } from "@/utils/logout";
 
 const PUBLIC_ROUTES = ["/auth", "/privacy-policy", "/app-info"];
 
@@ -24,36 +24,38 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
 
   const user = session?.user as ExtendedUser | undefined;
+
   const inviteFromUrl = searchParams?.get("invite") ?? null;
   const cleanPath = pathname.split("?")[0];
   const userInvite = user?.invite_link?.split("invite=")[1];
-  const [fullUrl, setFullUrl] = useState("");
+
   const [isExpired, setIsExpired] = useState(false);
-  const [checked, setChecked] = useState(false);
+
+  const fullInviteUrl = useMemo(() => {
+    if (!inviteFromUrl) return null;
+    return `${window.location.origin}/auth?invite=${inviteFromUrl}`;
+  }, [inviteFromUrl]);
 
   useEffect(() => {
-    const queryString = searchParams ? searchParams.toString() : "";
-    const origin = window.location.origin;
-    const completeUrl = queryString
-      ? `${origin}${pathname}?${queryString}`
-      : `${origin}${pathname}`;
-    setFullUrl(completeUrl);
-  }, [pathname, searchParams]);
+    if (fullInviteUrl) {
+      localStorage.setItem("invite_redirect_url", fullInviteUrl);
+    }
+  }, [fullInviteUrl]);
 
   const getUserData = async () => {
     try {
       const response = await api.get(
         `company-clients/invitation-link?user_id=${user?.id}`
       );
+
       if (response.data.IsSuccess) {
         setIsExpired(response.data.info.is_expired);
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setChecked(true);
     }
   };
+
   useEffect(() => {
     if (status === "authenticated" && user?.id) {
       getUserData();
@@ -62,8 +64,8 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isExpired) {
-      toast.error("Your invitation link has been expired!");
-      signOut({ callbackUrl: "/auth" });
+      toast.error("Your invitation link has expired!");
+      logoutWithInviteRedirect();
     }
   }, [isExpired]);
 
@@ -72,10 +74,17 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
       status === "authenticated" &&
       inviteFromUrl !== null &&
       !!userInvite &&
-      user.email !== undefined &&
+      user?.email !== undefined &&
       userInvite !== inviteFromUrl
     );
   }, [status, inviteFromUrl, userInvite, user?.email]);
+
+  useEffect(() => {
+    if (shouldShowInviteError) {
+      logoutWithInviteRedirect();
+    }
+  }, [shouldShowInviteError]);
+
   useEffect(() => {
     if (status === "loading") return;
 
@@ -92,11 +101,6 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
   }, [status, cleanPath]);
 
   if (status === "loading") return null;
-
-  if (shouldShowInviteError) {
-    return signOut({ callbackUrl: `${fullUrl}` });
-    // <InviteErrorPage onLogout={() => signOut({ callbackUrl: "/auth" })} />
-  }
 
   return <>{children}</>;
 }

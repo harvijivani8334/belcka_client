@@ -20,7 +20,6 @@ import { User } from "next-auth";
 
 const AccountTab = () => {
   const session = useSession();
-  let url = process.env.NEXT_PUBLIC_API_URL;
 
   const user = session.data?.user as User & { user_role?: string | null } & {
     phone?: number | null;
