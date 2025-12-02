@@ -5,7 +5,7 @@ export function logoutWithInviteRedirect() {
 
   const saved = localStorage.getItem("invite_redirect_url");
 
-  const authBaseUrl = process.env.NEXTAUTH_URL || "/auth";
+  const authBaseUrl = `${window.location.origin}/auth` || "/auth";
 
   const redirectUrl =
     saved ||

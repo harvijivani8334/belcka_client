@@ -33,7 +33,7 @@ function AuthProviderInner({ children }: { children: React.ReactNode }) {
 
   const fullInviteUrl = useMemo(() => {
     if (!inviteFromUrl) return null;
-    const authBaseUrl = process.env.NEXTAUTH_URL || "/auth";
+    const authBaseUrl = `${window.location.origin}/auth`;
     return `${authBaseUrl}?invite=${inviteFromUrl}`;
   }, [inviteFromUrl]);
 
